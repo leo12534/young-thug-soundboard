@@ -106,21 +106,26 @@ a:hover {
 }
 
 .header__title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4em;
   margin: 48px 0 0;
-  font-family: 'Bungee', system-ui, sans-serif;
-  font-weight: 400;
-  font-size: clamp(2.25rem, 8vw, 4.75rem);
-  line-height: 1;
+  font-weight: 700;
+  font-size: clamp(2rem, 7vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
   text-align: center;
 }
 
 .header__title-accent {
-  display: inline-block;
-  background: linear-gradient(180deg, #c8ffc9, var(--slime) 45%, var(--slime-deep));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 0 24px rgb(110 253 112 / 35%));
+  color: #8fd99a;
+}
+
+.header__title-emoji {
+  font-size: 0.7em;
+  letter-spacing: 0;
+  opacity: 0.6;
 }
 
 .header__intro {
