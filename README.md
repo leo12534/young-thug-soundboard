@@ -18,16 +18,15 @@ It started from Wes Bos's [#JavaScript30](https://javascript30.com/) Drum Kit ch
 
 ## Running it locally
 
-The site is plain HTML, CSS and JavaScript with no build step. You can open `docs/index.html` in a browser.
+The site is plain HTML, CSS and JavaScript with no build step and no dependencies. You can open `docs/index.html` in a browser.
 
-You can also use the Parcel dev server, which reloads the page when you save a file:
+You can also serve it locally:
 
 ```bash
-npm install
-npm run dev   # serves docs/index.html with Parcel
+python3 -m http.server -d docs   # then open http://localhost:8000
 ```
 
-ESLint and Prettier are set up with the `wesbos` config (see `.eslintrc`). There are no tests.
+If you want the page to reload when you save a file, use an editor extension like VS Code's Live Server. There are no tests.
 
 ## Project structure
 
