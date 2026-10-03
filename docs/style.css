@@ -1,216 +1,317 @@
-/* CSS Variables */
+/* Design tokens */
 :root {
-  --transition-time: 0s;
-}
-
-
-html {
-	box-sizing: border-box;
+  --bg: #050a06;
+  --surface: rgb(14 26 17 / 72%);
+  --surface-active: rgb(30 64 36 / 88%);
+  --border: rgb(110 253 112 / 14%);
+  --border-hover: rgb(110 253 112 / 45%);
+  --slime: #6efd70;
+  --slime-deep: #1fcc25;
+  --text: #ecfff0;
+  --muted: #9cc2a4;
+  --gap: 8px;
+  --radius: 14px;
+  --transition-time: 0s; /* Set per key from JS, based on the clip's length */
 }
 
 *,
-*:before,
-*:after {
-	box-sizing: inherit;
-}
-
-a {
-  color:#1fcc25;
-  text-decoration: none;
-  transition: all 200ms ease-out;
-}
-a:hover {
-  color:#106b13;
-  border-bottom:2px dotted #106b13;
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
-	background: url(./img/thugger-bg.jpg) center center;
-	background-size: cover;
-	background-color: #134315;
-	background-blend-mode: multiply;
-	font-family: sans-serif;
-	color: #fff;
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
-.thug__container {
+/* Background photo as a dark, desaturated backdrop with a green glow on top */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+body::before {
+  z-index: -2;
+  background: url(./img/thugger-bg.jpg) center top / cover no-repeat;
+  filter: grayscale(1) contrast(1.15) brightness(0.32);
+}
+
+body::after {
+  z-index: -1;
+  background: radial-gradient(ellipse 80% 55% at 50% -5%, rgb(110 253 112 / 22%), transparent 70%),
+    linear-gradient(to bottom, rgb(5 10 6 / 15%), var(--bg) 90%);
+}
+
+a {
+  color: var(--slime);
+  text-decoration: underline;
+  text-decoration-color: rgb(110 253 112 / 40%);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 150ms ease-out;
+}
+
+a:hover {
+  text-decoration-color: var(--slime);
+}
+
+:focus-visible {
+  outline: 2px solid var(--slime);
+  outline-offset: 3px;
+}
+
+.page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 16px 16px 32px;
+}
+
+/* Header */
+.header__bar {
   display: flex;
-  flex-flow:row wrap;
-	justify-content: center;
-}
-.thug__wrapper {
-	max-width: 1170px;
-  width:100%;
-  padding:0em 0;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
 }
 
-/* Javascript On Click Classes */
-.adlib__playing--active {
-	transform: scale(1.1);
-	border-color: #6efd70;
-	box-shadow: 0 0 1em #6efd70;
-
+.header__badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
-.adlib__thugger {
-  position: absolute;
-  background-image: url(./img/yt-1a.png);
-  background-size:75px 75px;
-  width: 75px;
-  height: 75px;
-  left:0;
-  top:0;
-  opacity: 0;
-  transition: transform var(--transition-time) ease-in-out, opacity var(--transition-time) ease-in-out;
-
-}
-.adlib__playing--active > .adlib__thugger {
-  opacity:1;
-  transform: translate(0px, -75px);
+.header__social {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: border-color 150ms ease-out;
 }
 
-
-.header__socials {
-	text-align: right;
+.header__social:hover {
+  border-color: var(--slime);
 }
 
-.header__socials-twitter {
-	font-family: 'Kite One', sans-serif;
-	border: 2px solid transparent;
-	text-decoration: none;
-	color: #1fcc25;
-	padding: 10px 15px;
-	transition: all 200ms ease-out;
+.header__title {
+  margin: 48px 0 0;
+  font-family: 'Bungee', system-ui, sans-serif;
+  font-weight: 400;
+  font-size: clamp(2.25rem, 8vw, 4.75rem);
+  line-height: 1;
+  text-align: center;
 }
 
-.header__socials-twitter:hover {
-	color: #1fcc25;
-	border-radius: 0.25em;
-	border: 2px solid #1fcc25;
-}
-
-.header__heading {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	text-align: center;
-  margin-top:1em;
-}
-
-.header__heading-emoji {
-	font-size: 2em;
-	margin: 0 0.3em;
-	opacity: 0.5;
-}
-
-.header__heading-text {
-	font-family: 'Lemon', cursive;
-	margin: 0;
-
-  font-size:1.5em;
-	letter-spacing: 1px;
-	-webkit-text-fill-color: transparent;
-	-webkit-text-stroke-width: 1px;
-	-webkit-text-stroke-color: #6efd70b2;
+.header__title-accent {
+  display: inline-block;
+  background: linear-gradient(180deg, #c8ffc9, var(--slime) 45%, var(--slime-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 24px rgb(110 253 112 / 35%));
 }
 
 .header__intro {
-	font-family: 'Kite One', sans-serif;
-	text-align: center;
-	padding: 0 10px;
+  max-width: 34rem;
+  margin: 16px auto 0;
+  color: var(--muted);
+  text-align: center;
 }
 
-/* Content Flex Layout */
+/* Pads: a simple grid on small screens, keyboard rows on desktop */
+.content {
+  margin-top: 64px; /* Room for the face that pops up above the top row */
+}
+
 .content__keys {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	margin-top: 1em;
-  gap:.3em;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--gap);
+}
+
+.content__keys-row {
+  display: contents;
 }
 
 .content__keys-item {
-	flex: 1 0 25%;
-}
-
-/* Content Style Section */
-.content__keys-item {
-  position:relative;
-	border: 0.25em solid #0c480e;
-	border-radius: 0.5em;
-  font-size: 0.85em;
-  padding: .75em 0.5em;
-	color: white;
-	background: rgba(0, 0, 0, 0.4);
-	text-shadow: 0 0 0.5em black;
-	cursor: pointer;
-  z-index:999;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  min-height: 84px;
+  padding: 10px 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 5%), 0 6px 18px rgb(0 0 0 / 35%);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
   transition: transform var(--transition-time) ease-in-out, border-color var(--transition-time) ease-in-out,
-    box-shadow var(--transition-time) ease-in-out;
+    box-shadow var(--transition-time) ease-in-out, background-color var(--transition-time) ease-in-out;
 }
 
-.content__keys-item:hover {
-	border: 0.25em solid #1fcc25;
+@media (hover: hover) {
+  .content__keys-item:hover {
+    border-color: var(--border-hover);
+  }
 }
 
 .content__keys-kbd {
-	display: block;
-	font-size: 1.5em;
+  min-width: 26px;
+  padding: 2px 7px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: rgb(0 0 0 / 35%);
+  color: var(--slime);
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: center;
 }
 
 .content__keys-label {
-	font-size: 0.65em;
-	font-weight: bold;
-	text-transform: uppercase;
-	letter-spacing: 0.2rem;
-	color: #91ffbd;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
+/* Bar along the bottom of the pad that fills while it's playing */
+.content__keys-item::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 6px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--slime);
+  transform: scaleX(0);
+  transform-origin: left;
+}
 
+/* Thugger's face pops up above the pad */
+.adlib__thugger {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  width: 72px;
+  height: 66px;
+  background: url(./img/yt-1b.png) center / contain no-repeat;
+  opacity: 0;
+  transform: translate(-50%, 40%) scale(0.6);
+  pointer-events: none;
+  transition: transform var(--transition-time) ease-in-out, opacity var(--transition-time) ease-in-out;
+}
 
-/* Medium devices (tablets, 768px and up) */
-@media (min-width: 768px) {
+/* Javascript on-press state */
+.adlib__playing--active {
+  z-index: 1;
+  transform: scale(1.05);
+  border-color: var(--slime);
+  background-color: var(--surface-active);
+  box-shadow: 0 0 0 1px var(--slime), 0 0 28px rgb(110 253 112 / 45%);
+}
 
-  .thug__wrapper {
-    padding:5em 0;
+.adlib__playing--active::after {
+  animation: pad-progress var(--transition-time) linear forwards;
+}
+
+.adlib__playing--active > .adlib__thugger {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+
+@keyframes pad-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Footer */
+.footer {
+  margin-top: 56px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+/* Tablets */
+@media (min-width: 600px) {
+  :root {
+    --gap: 10px;
   }
 
-  .header__heading-emoji {
-		font-size: 4em;
-	}
+  .page {
+    padding: 24px 24px 40px;
+  }
 
-	.header__heading-text {
-		font-size: 3.5em;
-	}
-	.header__intro {
-		font-size: 1.25em;
-	}
-
+  .content__keys {
+    grid-template-columns: repeat(5, 1fr);
+  }
 
   .content__keys-item {
-		flex: 1 0 15%;
-    font-size: 1.2em;
-    padding: 1rem 0.5rem;
-	}
-
+    min-height: 96px;
+  }
 }
 
-/*Large devices (desktops, 992px and up)*/
-@media (min-width: 992px) {
+/* Desktop: lay the pads out like the keyboard, so each pad sits where its key is */
+@media (min-width: 960px) {
+  .content__keys {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .content__keys-row {
+    display: flex;
+    gap: var(--gap);
+  }
+
+  .content__keys-item {
+    /* 10 keys per row, plus room for the second row's stagger */
+    --key-width: calc((100% - 9 * var(--gap)) / 10.25);
+    flex: 0 0 var(--key-width);
+    min-height: 104px;
+  }
+
+  .content__keys-row:nth-child(2) > :first-child {
+    margin-left: calc(var(--key-width) * 0.25);
+  }
+
+  .content__keys-row:nth-child(3) > :first-child {
+    margin-left: calc(var(--key-width) * 0.5);
+  }
+
+  .content__keys-row:nth-child(4) > :first-child {
+    margin-left: calc(var(--key-width) * 0.75);
+  }
+
+  .content__keys-label {
+    font-size: 0.8rem;
+  }
+
   .adlib__thugger {
-    background-size:95px 95px;
-    width: 95px;
-    height: 95px;
-
+    width: 96px;
+    height: 88px;
   }
-  .adlib__playing--active > .adlib__thugger {
-    opacity:1;
-    transform: translate(0px, -95px);
-  }
-
-	.content__keys-kbd {
-		font-size: 2em;
-	}
-
 }
-
