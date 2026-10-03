@@ -1,46 +1,51 @@
-const keys = document.querySelectorAll('.content__keys-item');
+const ACTIVE_CLASS = 'adlib__playing--active';
+const ANIMATION_SPEED = 1.65; // Animation lasts (clip duration / ANIMATION_SPEED)
+const FALLBACK_DURATION = 0.5; // Seconds, used if a clip's metadata hasn't loaded yet
 
-const handleKeyCode = function (e) {
-    let keyCode; // Variable to store keyCode, depending on click or keydown
-    if (e.type === 'click') {
-        keyCode = e.currentTarget.dataset.key;
-    } else {
-        keyCode = e.keyCode;
-    }
-    handleAudio(keyCode);
+// Lookup of key -> { button, audio }, built once so key presses don't query the DOM
+const adlibs = new Map();
+
+const getAnimationTime = function (audio) {
+    const { duration } = audio;
+    return Number.isFinite(duration) ? duration / ANIMATION_SPEED : FALLBACK_DURATION;
 };
 
-const handleAudio = function (keyCode) {
-    const currentKeyClicked = document.querySelector(`.content__keys-item[data-key="${keyCode}"]`);
-    const currentAudio = document.querySelector(`audio[data-key="${keyCode}"]`);
-    const currentAudioDuration = document.querySelector(`audio[data-key="${keyCode}"]`).duration;
-
-    if (!currentKeyClicked) return;
-    playAdlib(currentAudio);
-    updateVariableDuration(currentAudioDuration);
-    addRemoveActiveClass(currentKeyClicked);
+const animateKey = function (button, audio) {
+    // Scope the transition time to this key so other keys mid-animation aren't affected
+    button.style.setProperty('--transition-time', `${getAnimationTime(audio)}s`);
+    // Restart the animation if the key is pressed again before it finishes
+    button.classList.remove(ACTIVE_CLASS);
+    // eslint-disable-next-line no-void
+    void button.offsetWidth; // Force a reflow so the class re-add starts a fresh transition
+    button.classList.add(ACTIVE_CLASS);
 };
 
-const updateVariableDuration = function (audioDuration) {
-    const root = document.documentElement;
-    root.style.setProperty('--transition-time', `${audioDuration / 1.65}s`);
+const playAdlib = function (key) {
+    const adlib = adlibs.get(key);
+    if (!adlib) return;
+    const { button, audio } = adlib;
+    audio.currentTime = 0;
+    audio.play().catch(() => {}); // Ignore play() being interrupted by a rapid re-press
+    animateKey(button, audio);
 };
 
-const playAdlib = function (currentAudio) {
-    if (!currentAudio) return;
-    currentAudio.currentTime = 0;
-    currentAudio.play();
+const handleKeydown = function (e) {
+    // Ignore held-down keys and shortcuts like Cmd+R
+    if (e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
+    playAdlib(e.key.toUpperCase());
 };
 
-const addRemoveActiveClass = function (keyClicked) {
-    keyClicked.classList.toggle('adlib__playing--active');
-    keys.forEach((key) =>
-        key.addEventListener('transitionend', function (e) {
-            if (e.propertyName !== 'transform') return;
-            key.classList.remove('adlib__playing--active');
-        })
-    );
-};
+document.querySelectorAll('.content__keys-item').forEach((button) => {
+    const { key } = button.dataset;
+    const audio = document.querySelector(`audio[data-key="${key}"]`);
+    if (!audio) return;
+    adlibs.set(key, { button, audio });
 
-window.addEventListener('keydown', handleKeyCode);
-keys.forEach((key) => key.addEventListener('click', handleKeyCode));
+    button.addEventListener('click', () => playAdlib(key));
+    button.addEventListener('transitionend', (e) => {
+        if (e.propertyName !== 'transform') return;
+        button.classList.remove(ACTIVE_CLASS);
+    });
+});
+
+window.addEventListener('keydown', handleKeydown);

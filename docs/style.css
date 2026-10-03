@@ -34,7 +34,6 @@ body {
 }
 
 .thug__container {
-  display:flex;
   display: flex;
   flex-flow:row wrap;
 	justify-content: center;
@@ -62,7 +61,7 @@ body {
   left:0;
   top:0;
   opacity: 0;
-  transition: all var(--transition-time) ease-in-out;
+  transition: transform var(--transition-time) ease-in-out, opacity var(--transition-time) ease-in-out;
 
 }
 .adlib__playing--active > .adlib__thugger {
@@ -146,7 +145,8 @@ body {
 	text-shadow: 0 0 0.5em black;
 	cursor: pointer;
   z-index:999;
-  transition: all var(--transition-time) ease-in-out;
+  transition: transform var(--transition-time) ease-in-out, border-color var(--transition-time) ease-in-out,
+    box-shadow var(--transition-time) ease-in-out;
 }
 
 .content__keys-item:hover {
@@ -211,11 +211,6 @@ body {
 	.content__keys-kbd {
 		font-size: 2em;
 	}
-
-}
-
-/*X-Large devices (large desktops, 1200px and up)*/
-@media (min-width: 1200px) {
 
 }
 

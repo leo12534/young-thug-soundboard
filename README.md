@@ -45,7 +45,7 @@ The site is in `docs/` so GitHub Pages can serve it from that folder.
 ### Adding an adlib
 
 1. Put the clip in `docs/sounds/`.
-2. In `docs/index.html`, add a `<button class="content__keys-item" data-key="…">` and an `<audio data-key="…" src="./sounds/…">` that both use the same `data-key`. That value must be the JavaScript `keyCode` of the key you want (for example, `65` for **A**).
+2. In `docs/index.html`, add a `<button class="content__keys-item" data-key="…">` and an `<audio data-key="…" src="./sounds/…">` that both use the same `data-key`. That value is the key you want to press, in uppercase (for example, `A`, or `1` for the number keys).
 
 ## Key map
 
